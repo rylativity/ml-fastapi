@@ -1,0 +1,10 @@
+version: '3.9'
+
+services:
+  ml-api:
+    build: .
+    ports:
+        - 8000:8000        
+    volumes:
+        - ./main.py:/workspace/main.py
+        - ./model.py:/workspace/model.py
