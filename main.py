@@ -1,6 +1,9 @@
-from fastapi import FastAPI
+from model import classify_image
+
+from fastapi import FastAPI, File, UploadFile
 from fastapi.logger import logger
-from model import run_inference
+
+from io import BytesIO
 import logging
 
 ### https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker/issues/19
@@ -21,8 +24,14 @@ async def root():
     return {"message":"Goodbye"}
 
 
-@app.get("/ml/infer")
-async def infer(value: float):
+@app.post("/classify_image")
+async def run_classify_image(image_file: UploadFile = File(...)):
 
-    return run_inference(value)
+    img = BytesIO(image_file.file.read())
+
+    resp = classify_image(img)
+    logger.warn(type(resp))
+    logger.warn(resp)
+    
+    return resp
 
